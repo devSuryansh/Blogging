@@ -1,0 +1,75 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - uploads:/var/www/html/uploads
+      - logs:/var/www/html/logs
+    networks:
+      - blog-network
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME:-blogging}
+      POSTGRES_USER: ${DB_USER:-bloguser}
+      POSTGRES_PASSWORD: ${DB_PASS:-secure_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - blog-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-bloguser}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - blog-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/ssl:/etc/nginx/ssl
+      - uploads:/var/www/html/uploads:ro
+    depends_on:
+      - app
+    networks:
+      - blog-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  uploads:
+  logs:
+
+networks:
+  blog-network:
+    driver: bridge
