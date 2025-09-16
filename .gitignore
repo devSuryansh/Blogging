@@ -5,6 +5,7 @@ copilot-instructions.md
 .env
 .env.local
 .env.production
+config.php
 config_local.php
 
 # Database files
