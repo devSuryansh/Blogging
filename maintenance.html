@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maintenance - Beautiful Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+      .pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gradient-to-br from-slate-50 via-white to-indigo-50 min-h-screen flex items-center justify-center"
+  >
+    <div class="max-w-md w-full mx-auto px-6">
+      <div class="text-center">
+        <div
+          class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-3xl shadow-lg pulse"
+        >
+          B
+        </div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-4">Under Maintenance</h1>
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          We're currently performing some maintenance to improve your
+          experience. We'll be back online shortly!
+        </p>
+        <div class="bg-white rounded-xl p-6 shadow-lg">
+          <div
+            class="flex items-center justify-center space-x-2 text-sm text-gray-500"
+          >
+            <svg
+              class="w-4 h-4 animate-spin"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              ></path>
+            </svg>
+            <span>Estimated completion: 30 minutes</span>
+          </div>
+        </div>
+        <p class="text-sm text-gray-500 mt-6">
+          Follow us on social media for updates
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
