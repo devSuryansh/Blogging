@@ -65,7 +65,7 @@ It allows users to share their thoughts, interact with others, and explore blog 
 ## 📂 Project Structure
 
 ```md
-/blog-app
+/Blogging
 │── index.php # Homepage displaying blogs
 │── login.php # User login page
 │── signup.php # User signup page
@@ -96,8 +96,8 @@ It allows users to share their thoughts, interact with others, and explore blog 
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/blog-app.git
-   cd blog-app
+   git clone https://github.com/devSuryansh/Blogging.git
+   cd Blogging
    ```
 
 2. **Setup PostgreSQL Database**
