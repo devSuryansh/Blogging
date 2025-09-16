@@ -1,1 +1,82 @@
+# Copilot instructions
 copilot-instructions.md
+
+# Environment and configuration files
+.env
+.env.local
+.env.production
+config_local.php
+
+# Database files
+*.sql.backup
+*.dump
+*.sqlite
+*.db
+
+# Log files
+*.log
+logs/
+error.log
+access.log
+
+# Cache and temporary files
+cache/
+tmp/
+temp/
+*.tmp
+*.cache
+
+# Session files
+sessions/
+*.sess
+
+# Upload directories
+uploads/
+files/
+media/
+images/user_uploads/
+
+# Composer dependencies
+vendor/
+composer.lock
+
+# Node.js dependencies (if using any frontend tools)
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# PHP specific
+*.php~
+*.php.bak
+
+# Backup files
+*.backup
+*.bak
+*.old
+
+# Local development files
+local_config.php
+dev_config.php
+
+# Error reporting files
+php_errors.log
+error_log
