@@ -35,6 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if (!$errors) {
     $slug = preg_replace('/[^a-z0-9]+/i', '-', strtolower($title)) . '-' . substr(bin2hex(random_bytes(3)), 0, 6);
+
+    // Convert PHP array to PostgreSQL array format
+    $tags_pg = '{' . implode(',', array_map(function ($tag) {
+      return '"' . str_replace('"', '""', $tag) . '"';
+    }, $tags)) . '}';
+
     if ($editing) {
       $stmt = $pdo->prepare("UPDATE posts SET title=:title, slug=:slug, content=:content, excerpt=:excerpt, category=:cat, tags=:tags, updated_at=now() WHERE id=:id AND author_id=:uid");
       $stmt->execute([
@@ -43,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'content' => $content,
         'excerpt' => $excerpt,
         'cat' => $category,
-        'tags' => $tags,
+        'tags' => $tags_pg,
         'id' => $id,
         'uid' => $user['id']
       ]);
@@ -58,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'content' => $content,
         'excerpt' => $excerpt,
         'cat' => $category,
-        'tags' => $tags
+        'tags' => $tags_pg
       ]);
       $new = $stmt->fetch();
       header('Location: ?page=view&id=' . urlencode($new['id']));
@@ -183,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
               <input type="text"
                 name="tags"
-                value="<?= htmlspecialchars(is_array($post['tags']) ? join(',', $post['tags']) : '') ?>"
+                value="<?= htmlspecialchars(isset($post['tags']) && $post['tags'] ? (is_array($post['tags']) ? implode(',', $post['tags']) : trim($post['tags'], '{}')) : '') ?>"
                 placeholder="tag1, tag2, tag3"
                 class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
               <p class="mt-1 text-xs text-gray-500">Separate multiple tags with commas</p>
