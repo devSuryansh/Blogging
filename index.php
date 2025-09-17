@@ -441,7 +441,7 @@ if ($page === 'view') {
       </article>
 
       <!-- Comments Section -->
-      <section class="mt-8 bg-white rounded-2xl shadow-elegant p-8 animate-fade-in">
+      <section class="mt-8 bg-white rounded-2xl shadow-elegant p-8 animate-fade-in" id="comments">
         <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
           <svg class="w-6 h-6 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
@@ -449,8 +449,63 @@ if ($page === 'view') {
           Comments (<?= count($comments) ?>)
         </h3>
 
+        <!-- Add Comment Form -->
+        <?php if ($user): ?>
+          <div class="border border-gray-200 rounded-xl p-6 mb-8 bg-gradient-to-r from-indigo-50 to-purple-50">
+            <div class="flex items-center mb-4">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-medium mr-3">
+                <?= strtoupper(substr($user['display_name'] ?? $user['email'], 0, 1)) ?>
+              </div>
+              <div>
+                <p class="font-medium text-gray-900"><?= htmlspecialchars($user['display_name'] ?? $user['email']) ?></p>
+                <p class="text-sm text-gray-500"><?= htmlspecialchars($user['email']) ?></p>
+              </div>
+            </div>
+
+            <form method="post" action="comment.php" class="space-y-4">
+              <input type="hidden" name="csrf" value="<?= csrf_token() ?>">
+              <input type="hidden" name="post_id" value="<?= htmlspecialchars($p['id']) ?>">
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Your Comment *</label>
+                <textarea name="content"
+                  required
+                  rows="4"
+                  placeholder="Share your thoughts about this post..."
+                  class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"></textarea>
+              </div>
+
+              <div class="flex justify-end">
+                <button type="submit"
+                  class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:from-indigo-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg">
+                  <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                  </svg>
+                  Post Comment
+                </button>
+              </div>
+            </form>
+          </div>
+        <?php else: ?>
+          <div class="border border-gray-200 rounded-xl p-6 mb-8 bg-gray-50 text-center">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+              <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-medium text-gray-900 mb-2">Join the conversation</h4>
+            <p class="text-gray-500 mb-4">Please log in to leave a comment</p>
+            <a href="?page=login" class="inline-flex items-center bg-indigo-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-indigo-700 transition-colors">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+              </svg>
+              Log In to Comment
+            </a>
+          </div>
+        <?php endif; ?>
+
         <!-- Comments List -->
-        <div class="space-y-6 mb-8">
+        <div class="space-y-6">
           <?php foreach ($comments as $cm): ?>
             <div class="border-l-4 border-indigo-200 pl-6 py-4 bg-gray-50 rounded-r-xl">
               <div class="flex items-center justify-between mb-2">
@@ -479,52 +534,6 @@ if ($page === 'view') {
               <p class="text-gray-500">Be the first to share your thoughts!</p>
             </div>
           <?php endif; ?>
-        </div>
-
-        <!-- Add Comment Form -->
-        <div class="border-t border-gray-200 pt-8">
-          <h4 class="text-lg font-bold text-gray-900 mb-4">Add a comment</h4>
-          <form method="post" action="comment.php" class="space-y-4">
-            <input type="hidden" name="csrf" value="<?= csrf_token() ?>">
-            <input type="hidden" name="post_id" value="<?= htmlspecialchars($p['id']) ?>">
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Your Name *</label>
-                <input type="text"
-                  name="author_name"
-                  required
-                  placeholder="Enter your name"
-                  class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Email (optional)</label>
-                <input type="email"
-                  name="author_email"
-                  placeholder="your@email.com"
-                  class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Your Comment *</label>
-              <textarea name="content"
-                required
-                rows="4"
-                placeholder="Share your thoughts..."
-                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"></textarea>
-            </div>
-
-            <div class="flex justify-end">
-              <button type="submit"
-                class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:from-indigo-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg">
-                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                </svg>
-                Post Comment
-              </button>
-            </div>
-          </form>
         </div>
       </section>
     </main>
